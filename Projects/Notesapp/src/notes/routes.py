@@ -8,3 +8,11 @@ notesRoutes = APIRouter(prefix="/notes")
 @notesRoutes.post("/create")
 def createNote(body:noteSchema,db = Depends(get_session)):
     return controllers.createNote(body, db)
+
+@notesRoutes.get("/")
+def getNotes(db = Depends(get_session)):
+    return controllers.getNotes(db)
+
+@notesRoutes.get("/onenote/{id}")
+def getOnenote(id: int, db=Depends(get_session)):
+    return controllers.getOnenote(id,db)
