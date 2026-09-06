@@ -45,3 +45,16 @@ def updateNote(body:updateNoteSchema, noteId:int, db:Session):
     db.refresh(oneNote)
 
     return {"status":"Note updated successfully!","data":oneNote}
+
+def deleteNote(noteId:int, db:Session):
+
+    oneNote = db.query(NotesModel).get(noteId)
+        
+    if not oneNote:
+        raise HTTPException(404,detail="No Note with such ID")
+
+    db.delete(oneNote)
+    db.commit()
+
+    return {"status":"Note Deleted","data":oneNote}
+

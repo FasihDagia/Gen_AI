@@ -6,7 +6,7 @@ from src.utils.db import get_session
 notesRoutes = APIRouter(prefix="/notes")
 
 @notesRoutes.post("/create")
-def createNote(body:noteSchema,db = Depends(get_session)):
+def createNote(body:noteSchema, db = Depends(get_session)):
     return controllers.createNote(body, db)
 
 @notesRoutes.get("/")
@@ -14,9 +14,13 @@ def getNotes(db = Depends(get_session)):
     return controllers.getNotes(db)
 
 @notesRoutes.get("/onenote/{id}")
-def getOnenote(id: int, db=Depends(get_session)):
+def getOnenote(id:int, db=Depends(get_session)):
     return controllers.getOnenote(id,db)
 
-@notesRoutes.put("/updatenote/{id}")
+@notesRoutes.put("/update/{id}")
 def updateNote(body:updateNoteSchema, id:int, db = Depends(get_session)):
     return controllers.updateNote(body, id, db)
+
+@notesRoutes.delete("/delete/{id}")
+def deleteNote(id:int, db = Depends(get_session)):
+    return controllers.deleteNote(id, db)
