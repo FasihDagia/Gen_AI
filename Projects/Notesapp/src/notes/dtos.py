@@ -8,4 +8,8 @@ class noteSchema(BaseModel):
 class updateNoteSchema(BaseModel):
     title: Optional[str] = None
     note: Optional[str] = None
-    
+
+class noteResposeschema(BaseModel):
+    id: int
+    title: str
+    note: str

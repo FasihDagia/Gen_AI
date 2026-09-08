@@ -13,12 +13,12 @@ def createNote(body:noteSchema, db:Session):
     db.commit()
     db.refresh(newData)
 
-    return {"status":"Note Created successfully!","data":newData}
+    return newData
 
 def getNotes(db:Session):
 
     notes = db.query(NotesModel).all()
-    return {"Status":"All Notes","notes":notes}
+    return notes
 
 def getOnenote(noteId:int,db:Session):
 
@@ -27,7 +27,7 @@ def getOnenote(noteId:int,db:Session):
     if not oneNote:
         raise HTTPException(404,detail="No Note with such ID")
 
-    return {"Status":"Note Fetched","Data":oneNote}
+    return oneNote
 
 def updateNote(body:updateNoteSchema, noteId:int, db:Session):
 
@@ -44,7 +44,7 @@ def updateNote(body:updateNoteSchema, noteId:int, db:Session):
     db.commit()
     db.refresh(oneNote)
 
-    return {"status":"Note updated successfully!","data":oneNote}
+    return oneNote
 
 def deleteNote(noteId:int, db:Session):
 
@@ -56,5 +56,5 @@ def deleteNote(noteId:int, db:Session):
     db.delete(oneNote)
     db.commit()
 
-    return {"status":"Note Deleted","data":oneNote}
+    return None
 
