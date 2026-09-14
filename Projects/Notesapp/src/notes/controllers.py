@@ -2,8 +2,9 @@ from src.notes.dtos import noteSchema, updateNoteSchema
 from src.notes.models import NotesModel
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
+from src.users.models import userModel
 
-def createNote(body:noteSchema, db:Session):
+def createNote(body:noteSchema, db:Session, user:userModel):
 
     data = body.model_dump()
     newData = NotesModel(title=data["title"],
@@ -15,12 +16,12 @@ def createNote(body:noteSchema, db:Session):
 
     return newData
 
-def getNotes(db:Session):
+def getNotes(db:Session, user:userModel):
 
     notes = db.query(NotesModel).all()
     return notes
 
-def getOnenote(noteId:int,db:Session):
+def getOnenote(noteId:int, db:Session, user:userModel):
 
     oneNote = db.query(NotesModel).get(noteId)
 
@@ -29,7 +30,7 @@ def getOnenote(noteId:int,db:Session):
 
     return oneNote
 
-def updateNote(body:updateNoteSchema, noteId:int, db:Session):
+def updateNote(body:updateNoteSchema, noteId:int, db:Session, user:userModel):
 
     oneNote = db.query(NotesModel).get(noteId)
     
@@ -46,7 +47,7 @@ def updateNote(body:updateNoteSchema, noteId:int, db:Session):
 
     return oneNote
 
-def deleteNote(noteId:int, db:Session):
+def deleteNote(noteId:int, db:Session, user:userModel):
 
     oneNote = db.query(NotesModel).get(noteId)
         
