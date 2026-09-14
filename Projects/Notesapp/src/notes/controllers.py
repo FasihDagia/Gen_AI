@@ -64,7 +64,7 @@ def deleteNote(noteId:int, db:Session, user:userModel):
         raise HTTPException(404,detail="No Note with such ID")
 
     if oneNote.user_id != user.id:
-        raise HTTPException(401,detail="you are not authorized to update")
+        raise HTTPException(401,detail="you are not authorized to delete")
 
     db.delete(oneNote)
     db.commit()
