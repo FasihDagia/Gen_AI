@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey
 from src.utils.db import base
 
 class NotesModel(base):
@@ -7,4 +7,4 @@ class NotesModel(base):
     id = Column(Integer, primary_key=True)
     title = Column(String, default=None)
     note = Column(String, default=None)
-    user_id = Column(Integer, default=None)
+    user_id = Column(Integer, ForeignKey("user_info.id", ondelete="CASCADE"))
