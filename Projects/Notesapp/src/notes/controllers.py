@@ -1,14 +1,15 @@
 from src.notes.dtos import noteSchema, updateNoteSchema
 from src.notes.models import NotesModel
 from sqlalchemy.orm import Session
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from src.users.models import userModel
 
 def createNote(body:noteSchema, db:Session, user:userModel):
 
     data = body.model_dump()
-    newData = NotesModel(title=data["title"],
-                          note=data["note"])
+    newData = NotesModel(user_id = user.id,
+                        title=data["title"],
+                        note=data["note"])
 
     db.add(newData)
     db.commit()
@@ -18,12 +19,19 @@ def createNote(body:noteSchema, db:Session, user:userModel):
 
 def getNotes(db:Session, user:userModel):
 
-    notes = db.query(NotesModel).all()
+    notes = db.query(NotesModel).filter(NotesModel.user_id == user.id).all()
+    if not notes:
+        raise HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail="No notes for particular user")
     return notes
 
 def getOnenote(noteId:int, db:Session, user:userModel):
 
-    oneNote = db.query(NotesModel).get(noteId)
+    oneNote = (
+        db.query(NotesModel)
+        .filter(
+            NotesModel.id == noteId,
+            NotesModel.user_id == user.id
+        ).first())
 
     if not oneNote:
         raise HTTPException(404,detail="No Note with such ID")
@@ -32,7 +40,10 @@ def getOnenote(noteId:int, db:Session, user:userModel):
 
 def updateNote(body:updateNoteSchema, noteId:int, db:Session, user:userModel):
 
-    oneNote = db.query(NotesModel).get(noteId)
+    oneNote = (db.query(NotesModel).filter(
+                NotesModel.id == noteId,
+                NotesModel.user_id == user.id
+            ).first())
     
     if not oneNote:
         raise HTTPException(404,detail="No Note with such ID")
@@ -49,7 +60,10 @@ def updateNote(body:updateNoteSchema, noteId:int, db:Session, user:userModel):
 
 def deleteNote(noteId:int, db:Session, user:userModel):
 
-    oneNote = db.query(NotesModel).get(noteId)
+    oneNote = (db.query(NotesModel).filter(
+                NotesModel.id == noteId,
+                NotesModel.user_id == user.id
+            ).first())
         
     if not oneNote:
         raise HTTPException(404,detail="No Note with such ID")

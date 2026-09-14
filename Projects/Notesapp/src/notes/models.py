@@ -7,3 +7,4 @@ class NotesModel(base):
     id = Column(Integer, primary_key=True)
     title = Column(String, default=None)
     note = Column(String, default=None)
+    user_id = Column(Integer, default=None)
