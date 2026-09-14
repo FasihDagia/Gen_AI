@@ -40,13 +40,12 @@ def getOnenote(noteId:int, db:Session, user:userModel):
 
 def updateNote(body:updateNoteSchema, noteId:int, db:Session, user:userModel):
 
-    oneNote = (db.query(NotesModel).filter(
-                NotesModel.id == noteId,
-                NotesModel.user_id == user.id
-            ).first())
-    
+    oneNote = db.query(NotesModel).get(noteId)
     if not oneNote:
         raise HTTPException(404,detail="No Note with such ID")
+
+    if oneNote.user_id != user.id:
+        raise HTTPException(401,detail="you are not authorized to update")
 
     bodyd = body.model_dump(exclude_unset=True)
     for field, value in bodyd.items():
@@ -60,13 +59,12 @@ def updateNote(body:updateNoteSchema, noteId:int, db:Session, user:userModel):
 
 def deleteNote(noteId:int, db:Session, user:userModel):
 
-    oneNote = (db.query(NotesModel).filter(
-                NotesModel.id == noteId,
-                NotesModel.user_id == user.id
-            ).first())
-        
+    oneNote = db.query(NotesModel).get(noteId)
     if not oneNote:
         raise HTTPException(404,detail="No Note with such ID")
+
+    if oneNote.user_id != user.id:
+        raise HTTPException(401,detail="you are not authorized to update")
 
     db.delete(oneNote)
     db.commit()
