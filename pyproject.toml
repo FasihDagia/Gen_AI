@@ -15,5 +15,6 @@ dependencies = [
     "pyjwt>=2.13.0",
     "pymongo>=4.17.0",
     "sqlalchemy>=2.0.52",
+    "tiktoken>=0.14.0",
     "uvicorn>=0.52.4",
 ]
