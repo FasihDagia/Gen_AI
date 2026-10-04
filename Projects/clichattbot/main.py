@@ -32,11 +32,11 @@ async def main():
             prompt = input(f"{GREEN}Human:")
             print(RESET)
 
-            response = chat.send_message(prompt)
-            print(f"{BLUE}AI:",response)
-            # async for chunk in response:
-            #     if chunk.text:
-            #         print(chunk.text, end="", flush=True)
+            response = await chat.send_message_stream(prompt)
+            print(f"{BLUE}AI:")
+            async for chunk in response:
+                if chunk.text:
+                    print(chunk.text, end="", flush=True)
             print(RESET)
         
         print()
