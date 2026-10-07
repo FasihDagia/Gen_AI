@@ -9,6 +9,7 @@ dependencies = [
     "dotenv>=0.9.9",
     "fastapi>=0.141.1",
     "google-genai>=2.25.0",
+    "langsmith>=0.14.4",
     "ninja2>=0.1",
     "openai>=3.20.0",
     "psycopg[binary]>=3.3.5",
