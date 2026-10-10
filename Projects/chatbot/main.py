@@ -37,33 +37,32 @@ def get_weather(location:str):
         "description": data["weather"][0]["description"]
     }
 
-config = types.GenerateContentConfig(
-    tools= [get_weather]
-)
-
-chat = client.aio.chats.create(
-    model="gemini-3.5-flash-lite",
-    config=config
-)
 
 GREEN = "\033[92m"
 BLUE = "\033[94m"
 RESET = "\033[0m"
 
-async def main():
+async def chat_bot(question: str) -> str:
+    config = types.GenerateContentConfig(
+        tools=[get_weather]
+    )
 
-    prompt = " "
-    while prompt:
-        if prompt:
-            prompt = input(f"{GREEN}Human:")
-            print(RESET)
+    chat = client.aio.chats.create(
+        model="gemini-3.5-flash-lite",
+        config=config
+    )
 
-            response = await chat.send_message_stream(prompt)
-            print(f"{BLUE}AI:")
-            async for chunk in response:
-                if chunk.text:
-                    print(chunk.text, end="", flush=True)
-            print(RESET)
-        
-        print()
-run(main())
+    response = await chat.send_message_stream(question)
+
+    answer = []
+
+    async for chunk in response:
+        if chunk.text:
+            answer.append(chunk.text)
+
+    return "".join(answer)
+
+while True:
+    prompt = input("Human:")
+    response=run(chatbot(prompt))
+    print(response)
