@@ -1,7 +1,9 @@
 from langsmith import Client
+from langsmith.evaluation import aevaluate
 import os
 from chatbot.main import chat_bot
 from evaluator.evaluator import correctness
+import asyncio
 
 LANGSMITH_PROJECT = os.getenv(
     "LANGSMITH_PROJECT",
@@ -9,26 +11,28 @@ LANGSMITH_PROJECT = os.getenv(
 
 client = Client()
 
-DATASET_NAME = "chatbot-evaluation"
+DATASET_NAME = "clichatbot-evalation"
 
-
-def target(inputs: dict) -> dict:
+async def target(inputs: dict) -> dict:
     question = inputs["question"]
-    answer = chat_bot(question)
+
+    # Do not use asyncio.run() here
+    answer = await chat_bot(question)
 
     return {"response": answer}
 
 
-if __name__ == "__main__":
-    results = client.evaluate(
-        target,
-        data=DATASET_NAME,
-        evaluators=[correctness],
-        experiment_prefix="chatbot-v1",
-        metadata={
-            "project": LANGSMITH_PROJECT
-        }
-    )
+async def main():
+    results = await aevaluate(
+    target,
+    data=DATASET_NAME,
+    evaluators=[correctness],
+    experiment_prefix="chatbot-v1",
+)
 
-    print("Evaluation completed.")
+    print("Evaluation completed!")
     print(results)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

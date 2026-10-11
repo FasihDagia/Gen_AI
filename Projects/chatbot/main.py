@@ -10,8 +10,6 @@ load_dotenv(BASE_DIR/".env")
 
 WEATHER_API = os.getenv("WEATHER_API_KEY")
 
-print(WEATHER_API)
-
 client = Client()
 
 def get_weather(location:str):
@@ -43,8 +41,11 @@ BLUE = "\033[94m"
 RESET = "\033[0m"
 
 async def chat_bot(question: str) -> str:
+    default_instruction = "Respond to the users question in a short, concise manner (one short sentence)"
     config = types.GenerateContentConfig(
-        tools=[get_weather]
+        tools=[get_weather],
+        system_instruction= default_instruction,
+        temperature=0
     )
 
     chat = client.aio.chats.create(
@@ -62,7 +63,5 @@ async def chat_bot(question: str) -> str:
 
     return "".join(answer)
 
-while True:
-    prompt = input("Human:")
-    response=run(chatbot(prompt))
-    print(response)
+    
+
