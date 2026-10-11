@@ -16,7 +16,6 @@ DATASET_NAME = "clichatbot-evalation"
 async def target(inputs: dict) -> dict:
     question = inputs["question"]
 
-    # Do not use asyncio.run() here
     answer = await chat_bot(question)
 
     return {"response": answer}
