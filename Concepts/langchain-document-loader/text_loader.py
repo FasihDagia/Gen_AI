@@ -2,7 +2,7 @@ from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnableLambda, RunnableSequence
-from langchain_community.document_loaders import TextLoader
+from langchain_core.documents import Document
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -10,8 +10,13 @@ model = ChatGroq(model="openai/gpt-oss-20b")
 parser = StrOutputParser()
 
 def doc_load(path):
-    loader = TextLoader(path["path"],encoding="utf-8")
-    docs = loader.load()
+    with open(path["path"], "r", encoding="utf-8") as file:
+        text = file.read()
+
+    docs = [Document(
+        page_content=text
+    )]
+    
     return docs[0].page_content
 
 prompt = PromptTemplate.from_template(
