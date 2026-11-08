@@ -1,24 +1,6 @@
-import re
-from pathlib import Path
+from dotenv import load_dotenv
+import os
 
-env_vars = set()
+load_dotenv("E:/Gen_AI/.env")
 
-patterns = [
-    r'os\.getenv\(["\'](.*?)["\']',
-    r'os\.environ\.get\(["\'](.*?)["\']',
-    r'os\.environ\[["\'](.*?)["\']\]',
-]
-
-for file in Path(".").rglob("*.py"):
-    if ".venv" in str(file):
-        continue
-
-    content = file.read_text(encoding="utf-8", errors="ignore")
-
-    for pattern in patterns:
-        matches = re.findall(pattern, content)
-        env_vars.update(matches)
-
-print("\nEnvironment variables required/referenced:")
-for var in sorted(env_vars):
-    print(f"{var}=")
+print("API Key:", bool(os.getenv("GROQ_API_KEY")))

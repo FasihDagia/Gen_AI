@@ -1,16 +1,15 @@
-import os
 import csv
 from langchain_core.documents import Document
+# from langchain_groq import ChatGroq
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnableSequence
 from langchain_core.output_parsers import StrOutputParser
 from dotenv import load_dotenv
-from pathlib import Path
 
-load_dotenv(Path(__file__).resolve().parents[2] / ".env")
-print(os.getenv("GROQ_API_KEY"))
-# model = ChatGroq(model = "openai/gpt-oss-12b")
+
+load_dotenv()
+# model = ChatGroq(model = "openai/gpt-oss-20b")
 model = ChatGoogleGenerativeAI(model = "gemini-3.5-flash-lite")
 str_parser = StrOutputParser()
 csv_path = "E:/Gen_AI/Concepts/langchain-document-loader/Social_Network_Ads.csv"
@@ -33,5 +32,6 @@ with open(csv_path, "r", encoding="utf-8") as file:
         )
 
 chain = RunnableSequence(prompt, model, str_parser)
-chain.invoke({"data":documents})
+result = chain.invoke({"data":documents})
+print(result)
 
